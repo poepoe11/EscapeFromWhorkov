@@ -1,0 +1,4 @@
+js/config.json
+js/node_modules
+js/package-lock.json
+python/.env
