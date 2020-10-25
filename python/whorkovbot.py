@@ -126,7 +126,7 @@ async def on_message(message):
             return
 
         # assume that your data rows are tuples
-        template = "{0:40}|{1:20}|{2:20}" # column widths: 8, 10, 15, 7, 10
+        template = "{0:60}|{1:25}|{2:25}" # column widths: 8, 10, 15, 7, 10
 
         await message.channel.send("Ballistics Info:")
         await message.channel.send(f"{template.format('Bullet Name', 'Flesh Damage', 'Armor Damage')}")
