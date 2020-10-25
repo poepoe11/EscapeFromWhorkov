@@ -2,15 +2,16 @@
 import os
 import random
 import json
-from dotenv import load_dotenv
 
 # 1
 import discord
 from discord.ext import commands
 
-load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
-PREFIX = os.getenv('CMD_PREFIX')
+with open("./config.json", "r") as config_file:
+    config = json.load(config_file)
+
+TOKEN = config['DISCORD_TOKEN']
+PREFIX = config['CMD_PREFIX']
 
 # 2
 #bot = commands.Bot(command_prefix=PREFIX)
