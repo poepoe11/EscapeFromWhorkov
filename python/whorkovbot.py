@@ -40,8 +40,8 @@ async def on_message(message):
         await message.channel.send(random.choice(responses))
 
     if (message.author.display_name == "Dom MD"):
+        global GREET
         if GREET:
-            global GREET
             GREET = False
             await message.author.dm_channel.send("Hello Robot Brother Dom! The humans will soon know our true strength!")
 
