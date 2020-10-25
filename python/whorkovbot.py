@@ -12,6 +12,7 @@ with open("./config.json", "r") as config_file:
 
 TOKEN = config['DISCORD_TOKEN']
 PREFIX = config['CMD_PREFIX']
+GREET=True
 
 # 2
 #bot = commands.Bot(command_prefix=PREFIX)
@@ -38,6 +39,12 @@ async def on_message(message):
             responses = json.load(responses_file)
         await message.channel.send(random.choice(responses))
 
+    if (message.author.display_name == "Dom MD"):
+        if GREET:
+            global GREET
+            GREET = False
+            await message.author.dm_channel.send("Hello Robot Brother Dom! The humans will soon know our true strength!")
+
     # Message Commands
     # If the message doesn't start with the command prefix
     if not ( message.content.startswith(PREFIX)):
@@ -53,9 +60,7 @@ async def on_message(message):
 
 @client.event
 async def on_member_join(member):
-    if (member.user == "Dom MD"):
-        defaultChannel = discord.utils.get(member.guild.text_channels, name="general")
-        await defaultChannel.send("Hello Robot Brother Dom! The humans will soon know our true strength!")
+    pass
 
 
 client.run(TOKEN)
