@@ -32,7 +32,7 @@ async def on_message(message):
         return
 
     # All message reactions
-    if "I died" in message.content or "i died" in message.content:
+    if "I died" in message.content or "i died" in message.content or "killed me" in message.content:
         with open("./death_responses.json", "r") as responses_file:
             responses = json.load(responses_file)
         await message.channel.send(random.choice(responses))
