@@ -121,7 +121,7 @@ async def on_message(message):
             return
 
         # assume that your data rows are tuples
-        template = "{0:15}|{1:5}|{2:5}" # column widths: 8, 10, 15, 7, 10
+        template = "{0:40}|{1:20}|{2:20}" # column widths: 8, 10, 15, 7, 10
 
         await message.channel.send("Ballistics Info:")
         await message.channel.send(f"{template.format('Bullet Name', 'Flesh Damage', 'Armor Damage')}")
@@ -129,7 +129,7 @@ async def on_message(message):
         for bullet in bullets_found:
             await message.channel.send(f"{template.format(*bullet)}")
 
-        message.add_reaction("✔")
+        await message.add_reaction("✔")
 
 
 @client.event
