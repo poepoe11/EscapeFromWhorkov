@@ -136,4 +136,6 @@ async def on_message(message):
 async def on_member_join(member):
     pass
 
+
+load_bullets()
 client.run(TOKEN)
