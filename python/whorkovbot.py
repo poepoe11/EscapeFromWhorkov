@@ -1,6 +1,7 @@
 # bot.py
 import random
 import json
+from requests import NullHandler
 from requests_html import HTMLSession
 
 # 1
@@ -17,6 +18,55 @@ BULLETS = {}
 # 2
 #bot = commands.Bot(command_prefix=PREFIX)
 client = discord.Client()
+
+
+def get_bullet(bullet_name):
+    rtn_bullets = {}
+    for b_name in BULLETS:
+        if bullet_name in b_name:
+            rtn_bullets[b_name] = (BULLETS[b_name]["flesh_dmg"], BULLETS[b_name]["armor_dmg"])
+
+    return rtn_bullets
+
+    
+
+def load_bullets():
+    global BULLETS
+
+    session = HTMLSession()
+
+    r = session.get("https://escapefromtarkov.gamepedia.com/Ballistics")
+
+    ball_tab = r.html.find('table')[2]
+
+    tbody = ball_tab.find("tbody", first=True)
+    trows = tbody.find("tr")
+    #trows[3].find("td")[1].find("a",first=True).attrs["title"]
+    #trows[3].find("td")[1].text
+
+    for i in range(3, len(trows)):
+        row_datas = trows[i].find('td')
+
+        col_start = 1
+
+        if row_datas[col_start].find('a',first=True) is None:
+            col_start = 0
+        
+        title_data = row_datas[col_start]
+        
+        a_data = title_data.find('a',first=True)
+        b_name = a_data.attrs['title']
+        print(f"Bullet: {b_name}")
+
+        flesh_dmg_data = row_datas[col_start + 1]
+        flesh_dmg = flesh_dmg_data.text
+        print(f"Flesh Damage: {flesh_dmg}")
+
+        armor_dmg_data = row_datas[col_start + 2]
+        armor_dmg = armor_dmg_data.text
+        print(f"Armor Damage: {armor_dmg}")
+
+        BULLETS[b_name] = {"flesh_dmg":flesh_dmg, "armor_dmg":armor_dmg}
 
 #@bot.event
 @client.event
@@ -57,50 +107,29 @@ async def on_message(message):
     if cmd == "ping":
         await message.channel.send("pong")
 
-    if cmd == "load_bullets":
+    elif cmd == "load_bullets":
         await message.channel.send("Loading Ballistics Info")
         load_bullets()
+
+    elif cmd.startswith("bullet "):
+        bullet_to_find = cmd[len("bullet "):]
+        bullets_found = get_bullet(bullet_to_find)
+
+        if not bullets_found:
+            await message.channel.send("No bullets by that name were found!")
+            return
+
+        await message.channel.send("Ballistics Info:")
+        await message.channel.send("Bullet Name    Flesh Damage    Armor Damage")
+
+        for bullet in bullets_found:
+            await message.channel.send(f"{bullet}    {bullets_found[bullet][0]}    {bullets_found[bullet][1]}")
+
+
 
 
 @client.event
 async def on_member_join(member):
     pass
 
-def load_bullets():
-    global BULLETS
-
-    session = HTMLSession()
-
-    r = session.get("https://escapefromtarkov.gamepedia.com/Ballistics")
-
-    ball_tab = r.html.find('table')[2]
-
-    tbody = ball_tab.find("tbody", first=True)
-    trows = tbody.find("tr")
-    #trows[3].find("td")[1].find("a",first=True).attrs["title"]
-    #trows[3].find("td")[1].text
-
-    for i in range(3, len(trows)):
-        row_datas = trows[i].find('td')
-
-        col_start = 1
-
-        if row_datas[col_start].find('a',first=True) is None:
-            col_start = 0
-        
-        title_data = row_datas[col_start]
-        
-        a_data = title_data.find('a',first=True)
-        b_name = a_data.attrs['title']
-        print(f"Bullet: {b_name}")
-
-        flesh_dmg_data = row_datas[col_start + 1]
-        flesh_dmg = flesh_dmg_data.text
-        print(f"Flesh Damage: {flesh_dmg}")
-
-        armor_dmg_data = row_datas[col_start + 2]
-        armor_dmg = armor_dmg_data.text
-        print(f"Armor Damage: {armor_dmg}")
-
-        BULLETS[b_name] = {"flesh_dmg":flesh_dmg, "armor_dmg":armor_dmg}
 client.run(TOKEN)
