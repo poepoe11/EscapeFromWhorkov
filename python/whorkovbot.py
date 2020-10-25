@@ -24,7 +24,8 @@ def get_bullet(bullet_name):
     rtn_bullets = []
     for b_name in BULLETS:
         if bullet_name in b_name:
-            rtn_bullets.append(b_name, BULLETS[b_name]["flesh_dmg"], BULLETS[b_name]["armor_dmg"])
+            bullet_info = (b_name, BULLETS[b_name]["flesh_dmg"], BULLETS[b_name]["armor_dmg"])
+            rtn_bullets.append(bullet_info)
 
     return rtn_bullets
 
