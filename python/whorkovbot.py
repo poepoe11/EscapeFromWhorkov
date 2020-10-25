@@ -55,8 +55,9 @@ def load_bullets():
         
         title_data = row_datas[col_start]
         
-        a_data = title_data.find('a',first=True)
-        b_name = a_data.attrs['title']
+        #a_data = title_data.find('a',first=True)
+        #b_name = a_data.attrs['title']
+        b_name = title_data.text
         print(f"Bullet: {b_name}")
 
         flesh_dmg_data = row_datas[col_start + 1]
