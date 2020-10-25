@@ -121,7 +121,7 @@ async def on_message(message):
 
         if not bullets_found:
             await message.channel.send("No bullets by that name were found!")
-            confirm_message_cmd(message)
+            await confirm_message_cmd(message)
             return
 
         # assume that your data rows are tuples
@@ -133,7 +133,7 @@ async def on_message(message):
         for bullet in bullets_found:
             await message.channel.send(f"{template.format(*bullet)}")
 
-    confirm_message_cmd(message)
+    await confirm_message_cmd(message)
 
 @client.event
 async def on_member_join(member):
