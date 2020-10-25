@@ -57,12 +57,16 @@ async def on_message(message):
     if cmd == "ping":
         await message.channel.send("pong")
 
+    if cmd == "load_bullets":
+        await message.channel.send("Loading Ballistics Info")
+        load_bullets()
+
 
 @client.event
 async def on_member_join(member):
     pass
 
-def load_balls():
+def load_bullets():
     global BULLETS
 
     session = HTMLSession()
