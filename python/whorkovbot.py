@@ -21,10 +21,10 @@ client = discord.Client()
 
 
 def get_bullet(bullet_name):
-    rtn_bullets = {}
+    rtn_bullets = []
     for b_name in BULLETS:
         if bullet_name in b_name:
-            rtn_bullets[b_name] = (BULLETS[b_name]["flesh_dmg"], BULLETS[b_name]["armor_dmg"])
+            rtn_bullets.append(b_name, BULLETS[b_name]["flesh_dmg"], BULLETS[b_name]["armor_dmg"])
 
     return rtn_bullets
 
@@ -119,13 +119,16 @@ async def on_message(message):
             await message.channel.send("No bullets by that name were found!")
             return
 
+        # assume that your data rows are tuples
+        template = "{0:15}|{1:5}|{2:5}" # column widths: 8, 10, 15, 7, 10
+
         await message.channel.send("Ballistics Info:")
-        await message.channel.send("Bullet Name    Flesh Damage    Armor Damage")
+        await message.channel.send(f"{template.format('Bullet Name', 'Flesh Damage', 'Armor Damage')}")
 
         for bullet in bullets_found:
-            await message.channel.send(f"{bullet}    {bullets_found[bullet][0]}    {bullets_found[bullet][1]}")
+            await message.channel.send(f"{template.format(*bullet)}")
 
-
+        message.add_reaction("✔")
 
 
 @client.event
