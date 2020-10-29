@@ -23,7 +23,7 @@ client = discord.Client()
 def get_bullet(bullet_name):
     rtn_bullets = []
     for b_name in BULLETS:
-        if bullet_name in b_name:
+        if bullet_name.lower() in b_name.lower():
             bullet_info = (b_name, BULLETS[b_name]["flesh_dmg"], BULLETS[b_name]["armor_dmg"])
             rtn_bullets.append(bullet_info)
 
@@ -126,13 +126,20 @@ async def on_message(message):
             return
 
         # assume that your data rows are tuples
-        template = "{0:60}|{1:25}|{2:25}" # column widths: 8, 10, 15, 7, 10
+        template = "{:<25}|{:<15}|{:<15}" # column widths: 8, 10, 15, 7, 10
 
         await message.channel.send("Ballistics Info:")
-        await message.channel.send(f"{template.format('Bullet Name', 'Flesh Damage', 'Armor Damage')}")
+
+        bullet_msg_str = f"```\n{template.format('Bullet Name', 'Flesh Damage', 'Armor Damage')}\n"
+        #await message.channel.send(f"{template.format('Bullet Name', 'Flesh Damage', 'Armor Damage')}")
 
         for bullet in bullets_found:
-            await message.channel.send(f"{template.format(*bullet)}")
+            #await message.channel.send(f"{template.format(*bullet)}")
+            bullet_msg_str += f"{template.format(*bullet)}\n"
+        
+        bullet_msg_str += "```"
+
+        await message.channel.send(bullet_msg_str)
 
     await confirm_message_cmd(message)
 
