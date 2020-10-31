@@ -2,11 +2,12 @@
 import random
 import json
 import os
-
-# TODO: Use importlib
-import imp
+import imp  # TODO: Use importlib
 
 import utils.util as UTILS
+from log import whorkovlogger as LOGGER
+
+logger = LOGGER.get_logger(__name__)
 
 # 1
 import discord
@@ -48,8 +49,11 @@ class WhorkovBotClient(discord.Client):
         list_modules.remove("icommand.py")
         for module_name in list_modules:
             if module_name.split(".")[-1] == "py":
-                print(f"Load module ' {module_name} ' :")
-                cmd_module = imp.load_source("module", dir + os.sep + module_name)
+                logger.debug(f"Load module ' {module_name} ' :")
+                cmd_module = imp.load_source(
+                    f"whorkov.cmd_module.{module_name[:len(module_name)-3]}",
+                    dir + os.sep + module_name,
+                )
                 self.cmd_classes.append(cmd_module.get_cmd_class())
 
     def parse_config(self):
@@ -64,7 +68,7 @@ class WhorkovBotClient(discord.Client):
         on connect to discord server
         """
         for guild in self.guilds:
-            print(
+            logger.debug(
                 f"{self.user} is connected to the following guild:\n"
                 f"{guild.name}(id: {guild.id})"
             )
@@ -115,20 +119,22 @@ class WhorkovBotClient(discord.Client):
         # the rest of the wprds must be arguments
         arg_str = full_cmd_str[len(cmd_str) :].strip()
 
-        # print command
-        print(f"cmd:{cmd_str}")
+        # log command
+        logger.debug(f"cmd:{cmd_str}")
 
         # for each of the registered commands
         for cmd_class in self.cmd_classes:
             # use command class method to test if this is the correct cmd
             if cmd_class.is_cmd(cmd_str=cmd_str):
                 # found class
-                print(f"Found cmd class: {cmd_class.__class__} for cmd: {cmd_str}")
+                logger.debug(
+                    f"Found cmd class: {cmd_class.__class__} for cmd: {cmd_str}"
+                )
                 try:
                     # execute command
                     await cmd_class.execute_cmd(arg_str, message)
                 except Exception as e:
-                    print(f"Exception when executing command!\n{e}")
+                    logger.error(f"Exception when executing command!\n{e}")
                     UTILS.fail_reaction(message=message)
                     raise e
                 break

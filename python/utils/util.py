@@ -1,4 +1,7 @@
 from utils import constants as CONST
+from log import whorkovlogger as LOGGER
+
+logger = LOGGER.get_logger(__name__)
 
 CLIENT = None
 
@@ -35,7 +38,7 @@ async def send_msg(channel, msg_string):
         await channel.send(msg_string)
 
     except Exception as e:
-        print(f"Exception occurred:\n{e}")
+        logger.error(f"Exception occurred:\n{e}")
         return False
 
     return True
