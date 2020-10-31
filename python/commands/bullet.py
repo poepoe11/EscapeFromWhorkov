@@ -1,5 +1,6 @@
 from commands import icommand
 from requests_html import HTMLSession
+from utils import util as UTILS
 
 
 def get_cmd_class():
@@ -18,7 +19,11 @@ class BulletCmd(icommand.WhorkovCmd):
         self.load_bullets()
 
     async def execute_cmd(self, arg_str, message):
+
         bullet_to_find = arg_str
+
+        print(f"Finding ballistics info for bullet: {arg_str}")
+
         bullets_found = self.get_bullet(bullet_to_find)
 
         if not bullets_found:
@@ -56,7 +61,7 @@ class BulletCmd(icommand.WhorkovCmd):
         # assume that your data rows are tuples
         # template = "{:<25}|{:<5}|{:<5}|{:<5}|{:<5}|{:<5}|{:<5}|{:<5}|{:<5}|{:<5}|{:<5}|{:<5}|{:<5}"  # column widths: 8, 10, 15, 7, 10
 
-        await message.channel.send("Ballistics Info:")
+        await UTILS.send_msg(channel=message.channel, msg_string="Ballistics Info:")
 
         h1_str = top_template.format(
             "",
@@ -78,7 +83,8 @@ class BulletCmd(icommand.WhorkovCmd):
 
         bullet_msg_str += "```"
 
-        await message.channel.send(bullet_msg_str)
+        if not await UTILS.send_msg(channel=message.channel, msg_string=bullet_msg_str):
+            await UTILS.fail_reaction(message=message)
 
     def get_bullet(self, bullet_name):
         rtn_bullets = []

@@ -41,6 +41,8 @@ class WhorkovBotClient(discord.Client):
 
         self.load_commands()
 
+        UTILS.set_client(self)
+
     def load_commands(self, dir="./commands"):
         list_modules = os.listdir(dir)
         list_modules.remove("icommand.py")
@@ -122,8 +124,13 @@ class WhorkovBotClient(discord.Client):
             if cmd_class.is_cmd(cmd_str=cmd_str):
                 # found class
                 print(f"Found cmd class: {cmd_class.__class__} for cmd: {cmd_str}")
-                # execute command
-                await cmd_class.execute_cmd(arg_str, message)
+                try:
+                    # execute command
+                    await cmd_class.execute_cmd(arg_str, message)
+                except Exception as e:
+                    print(f"Exception when executing command!\n{e}")
+                    UTILS.fail_reaction(message=message)
+                    raise e
                 break
 
         await UTILS.confirm_message_cmd(message)
