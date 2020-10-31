@@ -5,7 +5,6 @@ import os
 
 # TODO: Use importlib
 import imp
-from re import U
 
 import utils.util as UTILS
 

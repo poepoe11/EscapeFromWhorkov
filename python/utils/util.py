@@ -1,6 +1,4 @@
 from utils import constants as CONST
-import discord
-import re
 
 CLIENT = None
 
