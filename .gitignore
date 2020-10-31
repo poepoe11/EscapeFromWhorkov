@@ -3,3 +3,6 @@ js/node_modules
 js/package-lock.json
 python/.env
 python/config.json
+python/ballistics.html
+python/commands/__pycache__
+python/utils/__pycache__
