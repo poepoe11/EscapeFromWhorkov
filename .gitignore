@@ -4,5 +4,6 @@ js/package-lock.json
 python/.env
 python/config.json
 python/ballistics.html
-python/commands/__pycache__
-python/utils/__pycache__
+*__pycache__
+python/log/log_config.yml
+python/log/whorkov_app.log
