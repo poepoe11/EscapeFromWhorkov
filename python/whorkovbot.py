@@ -54,7 +54,10 @@ class WhorkovBotClient(discord.Client):
                     f"whorkov.cmd_module.{module_name[:len(module_name)-3]}",
                     dir + os.sep + module_name,
                 )
-                self.cmd_classes.append(cmd_module.get_cmd_class())
+                logger.debug(f"cmd_module: {cmd_module}")
+                cmd_class = cmd_module.get_cmd_class()
+                logger.debug(f"cmd_class: {cmd_class}")
+                self.cmd_classes.append(cmd_class)
 
     def parse_config(self):
         """
@@ -95,13 +98,6 @@ class WhorkovBotClient(discord.Client):
 
             # send a random response
             await message.channel.send(random.choice(responses))
-
-        if message.author.display_name == "Dom MD":
-            if self.greet:
-                self.greet = False
-                await message.author.dm_channel.send(
-                    "Hello Robot Brother Dom! The humans will soon know our true strength!"
-                )
 
         # Message Commands
         # If the message doesn't start with the command prefix
