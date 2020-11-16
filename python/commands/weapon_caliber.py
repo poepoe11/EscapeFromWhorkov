@@ -1,7 +1,7 @@
 from commands import icommand
 from requests_html import HTMLSession
 from log import whorkovlogger as LOGGER
-from utils import util as UTILS
+from common.utils import util as UTILS
 
 logger = LOGGER.get_logger(__name__)
 

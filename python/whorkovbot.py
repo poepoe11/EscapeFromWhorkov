@@ -4,14 +4,17 @@ import json
 import os
 import imp  # TODO: Use importlib
 
-import utils.util as UTILS
+import common.utils.util as UTILS
 from log import whorkovlogger as LOGGER
+from common.utils import constants as CONTS
+import time
 
 logger = LOGGER.get_logger(__name__)
 
 # 1
 import discord
 from discord.ext import commands
+import pyttsx3
 
 
 def load_config(filename="./config.json"):
@@ -76,6 +79,25 @@ class WhorkovBotClient(discord.Client):
                 f"{guild.name}(id: {guild.id})"
             )
 
+    async def on_voice_state_update(self, member, before, after):
+        if (
+            member.display_name == "CommonCommentary"
+            and before.channel is None
+            and after.channel.name == "General"
+        ):
+            try:
+                voice_con = await after.channel.connect()
+                voice_con.play(
+                    discord.FFmpegPCMAudio(
+                        executable=CONTS.DIR.FFMPEG, source="./intro.mp3"
+                    )
+                )
+
+                while voice_con.is_playing():
+                    time.sleep(2)
+            finally:
+                await voice_con.disconnect()
+
     async def on_message(self, message):
         """
         when a message is sent
@@ -131,7 +153,7 @@ class WhorkovBotClient(discord.Client):
                     await cmd_class.execute_cmd(arg_str, message)
                 except Exception as e:
                     logger.error(f"Exception when executing command!\n{e}")
-                    UTILS.fail_reaction(message=message)
+                    await UTILS.fail_reaction(message=message)
                     raise e
                 break
 

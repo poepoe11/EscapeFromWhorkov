@@ -7,3 +7,4 @@ python/ballistics.html
 *__pycache__
 python/log/log_config.yml
 python/log/whorkov_app.log
+*.mp3
