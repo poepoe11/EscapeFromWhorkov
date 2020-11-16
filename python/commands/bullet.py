@@ -1,6 +1,9 @@
 from commands import icommand
 from requests_html import HTMLSession
-from utils import util as UTILS
+from common.utils import util as UTILS
+from log import whorkovlogger as LOGGER
+
+logger = LOGGER.get_logger(__name__)
 
 
 def get_cmd_class():
@@ -9,6 +12,7 @@ def get_cmd_class():
 
 class BulletCmd(icommand.WhorkovCmd):
     def __init__(self):
+
         super(BulletCmd, self).__init__()
         self.cmd_string_long = "bullet"
         self.cmd_string_short = "b"
@@ -22,7 +26,7 @@ class BulletCmd(icommand.WhorkovCmd):
 
         bullet_to_find = arg_str
 
-        print(f"Finding ballistics info for bullet: {arg_str}")
+        logger.info(f"Finding ballistics info for bullet: {arg_str}")
 
         bullets_found = self.get_bullet(bullet_to_find)
 
